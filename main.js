@@ -120,7 +120,7 @@ function bukaFormBaru() {
     document.getElementById('btnSubmitMurid').innerHTML = `<i class="ph ph-floppy-disk text-xl"></i> Simpan Data Pendaftar`; 
     switchView('form');
     
-    // Perbarui fungsi search Select2
+    // Perbarui fungsi search Select2 setelah form di-reset
     if (typeof $ !== 'undefined') $('select').trigger('change');
 }
 
@@ -169,11 +169,11 @@ function applySettings(settings) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => { 
-    // Inisialisasi Fungsi Search untuk semua Select Dropdown menggunakan Select2
+    // INISIALISASI SELECT2 (KOTAK PENCARIAN DI DROPDOWN)
     if (typeof $ !== 'undefined') {
         $('select').select2({ width: '100%' });
         
-        // Memastikan Select2 kembali ke default saat form dikosongkan (reset)
+        // Paksa sinkronisasi ketika tombol 'reset' ditekan (pada form batal/baru)
         document.addEventListener('reset', function(e) {
             setTimeout(() => { $(e.target).find('select').trigger('change'); }, 10);
         });
@@ -396,8 +396,6 @@ async function fetchReferences() {
                 if(el) { 
                     el.innerHTML = '<option value="">-- Pilih --</option>'; 
                     data.forEach(i => el.innerHTML += `<option value="${i}">${i}</option>`); 
-                    // Sinkronisasi data baru ke Select2 fungsi search
-                    if (typeof $ !== 'undefined') $(el).trigger('change');
                 }
             };
             populate('desa_kelurahan', result.data.desa); populate('v_desa', result.data.desa); 
@@ -407,7 +405,9 @@ async function fetchReferences() {
             const elCheck = document.getElementById('entitas_checkbox_container'); 
             if(elCheck) { 
                 elCheck.innerHTML = ''; 
-                result.data.entitas.forEach(item => { 
+                // PERBAIKAN: GABUNGKAN ENTITAS & INDIVIDU
+                const combinedEntitas = [...result.data.entitas, ...result.data.individu];
+                combinedEntitas.forEach(item => { 
                     elCheck.innerHTML += `<label class="flex items-center space-x-2 text-sm bg-slate-50 p-2 rounded border cursor-pointer hover:bg-slate-100 transition-colors"><input type="checkbox" name="chk_entitas" value="${item}" class="rounded text-blue-600 focus:ring-blue-500"><span>${item}</span></label>`; 
                 }); 
             }
@@ -424,12 +424,11 @@ async function fetchReferences() {
                     if(el) { 
                         el.innerHTML = '<option value="">-- Pilih --</option>'; 
                         result.data.kompetitor.forEach(s => el.innerHTML += `<option value="${s}">${s}</option>`); 
-                        if (typeof $ !== 'undefined') $(el).trigger('change');
                     }
                 });
             }
             
-            // Sinkronisasi seluruh dropdown form
+            // PERBAIKAN: Segarkan Select2 pencarian setelah list data masuk
             if (typeof $ !== 'undefined') $('select').trigger('change');
         }
     } catch (error) { console.error("Error Fetch Reference", error); }
