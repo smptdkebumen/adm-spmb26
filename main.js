@@ -1,6 +1,6 @@
 //<![CDATA[
         // WAJIB ISI URL APPS SCRIPT ANDA DI SINI
-const SCRIPT_URL = "URL_API_GOOGLE_SCRIPT_ANDA_DISINI";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCr9kdQBRX5GhP_SqJi-1b4Z4JhXyQvYPkNTv53qRd81UV4XTKCE8fDoorJb3OHeAHzQ/exec";
 
 let masterData = []; 
 let visitData = []; 
